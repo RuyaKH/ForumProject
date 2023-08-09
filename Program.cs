@@ -27,6 +27,11 @@ namespace ForumProject
 
             var app = builder.Build();
 
+            using (var scope = app.Services.CreateScope())
+            {
+                SeedData.Initialise(scope.ServiceProvider);
+            }
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

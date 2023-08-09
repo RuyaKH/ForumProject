@@ -10,19 +10,19 @@ namespace ForumProject.Data
             var context = serviceProvider.GetRequiredService<ForumDbContext>();
             //var userManager = serviceProvider.GetRequiredService<UserManager<Adventurer>>();
 
-            //if (context.Adventurers.Any())
-            //{
-            //    context.Adventurers.RemoveRange(context.Adventurers);
-            //    context.Users.RemoveRange(context.Users);
-            //    context.SaveChanges();
-            //}
+            if (context.Adventurers.Any())
+            {
+                context.Adventurers.RemoveRange(context.Adventurers);
+                context.Users.RemoveRange(context.Users);
+                context.SaveChanges();
+            }
 
-            //var ruya = new Adventurer
-            //{
-            //    UserName = "ruya@forum.com",
-            //    Email = "ruya@forum.com",
-            //    EmailConfirmed = true
-            //};
+            var ruya = new Adventurer
+            {
+                UserName = "ruya@forum.com",
+                Email = "ruya@forum.com",
+                EmailConfirmed = true
+            };
 
             if(context.Threads.Any())
             {
@@ -37,7 +37,8 @@ namespace ForumProject.Data
                     Description = "The Adventurer(user) has a problem and describes it in this box here",
                     Status = "Open",
                     DatePosted = DateTime.Today,
-                    UpVotes = 5
+                    UpVotes = 5,
+                    Adventurer = ruya
                 },
                 new ForumModel
                 {
@@ -45,7 +46,8 @@ namespace ForumProject.Data
                     Description = "The Adventurer(user) has a problem and describes it in this box here",
                     Status = "Open",
                     DatePosted = DateTime.Today.AddDays(-1),
-                    UpVotes = 10
+                    UpVotes = 10,
+                    Adventurer = ruya
                 });
 
 
