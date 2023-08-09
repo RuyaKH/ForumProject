@@ -1,0 +1,78 @@
+﻿@model ForumProject.Models.ForumViewModel
+
+@{
+    ViewData["Title"] = "Forum Home";
+}
+<head>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+    <link rel="javascriptsheet" href="~/js/site.js">
+    <p>
+        <a asp-action="Create">Create New Post</a>
+    </p>
+<div class="text-center">
+    <h1 class="display-4">Forum Project</h1>
+</div>
+
+<form asp-controller="Home" asp-action="Index" method="get">
+    <p>
+        Title: <input type="text" asp-formaction="SearchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+<button class="collapsible">Welcome Adventurers!!</button>
+<div class="content">
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
+        sed do eiusmod tempor incididunt ut labore et dolore magna 
+        aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+        ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </p>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(thread => thread.Threads[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(thread => thread.Threads[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(thread => thread.Threads[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(thread => thread.Threads[0].DatePosted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(thread => thread.Threads[0].UpVotes)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Threads)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(threadItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(threadItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(threadItem => item.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(threadItem => item.DatePosted)
+        </td>
+        <td>
+            @Html.DisplayFor(threadItem => item.UpVotes)
+        </td>
+    </tr>
+}
+    </tbody>
+</table>
+</body>
