@@ -16,3 +16,16 @@ for (i = 0; i < coll.length; i++) {
         }
     });
 }
+
+let collapseBox = document.querySelector('collapsible');
+
+Array.from(collapseBox).forEach(box => {
+    box.addEventListener('keydown', e => {
+        //32 == spacebar
+        //13 == enter
+        if (e.which === 32 || e.which === 13) {
+            e.preventDefault();
+            box.click();
+        };
+    });
+});
