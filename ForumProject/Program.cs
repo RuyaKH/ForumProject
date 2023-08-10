@@ -1,4 +1,5 @@
 using ForumProject.Data;
+using ForumProject.Models;
 using ForumProject.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,8 +18,10 @@ namespace ForumProject
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddDefaultIdentity<Adventurer>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ForumDbContext>();
+
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<IForumService, ForumService>();
@@ -49,6 +52,7 @@ namespace ForumProject
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

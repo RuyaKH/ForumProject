@@ -10,11 +10,13 @@ namespace ForumProject.Controllers
     public class ForumController : Controller
     {
         private readonly IForumService _service;
-        //private readonly UserManager<AppUser> _userManager;
+        private readonly UserManager<Adventurer> _userManager;
 
-        public ForumController(IForumService service)
+        public ForumController(IForumService service,
+            UserManager<Adventurer> userManager)
         {
             _service = service;
+            _userManager = userManager;
         }
 
         //private string GetRole()
@@ -24,7 +26,8 @@ namespace ForumProject.Controllers
 
         public async Task<IActionResult> Index(string searchString)
         {
-            var response = await _service.GetForumItemsAsync(searchString);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var response = await _service.GetForumItemsAsync(currentUser, searchString);
             if (response.Success == false)
                 return Problem(response.Message);
             return View(response.Data);
@@ -38,8 +41,8 @@ namespace ForumProject.Controllers
 
         public async Task<IActionResult> Details(int? id)
         {
-            //var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            var response = await _service.GetDetailsAsync(id);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var response = await _service.GetDetailsAsync(currentUser, id);
             if (!response.Success)
                 return NotFound();
             return View(response.Data);
@@ -57,10 +60,10 @@ namespace ForumProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,Status,DatePosted,UpVotes")] ForumModel thread)
         {
-            //var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
             if (ModelState.IsValid)
             {
-                await _service.CreateThreadAsync(thread);
+                await _service.CreateThreadAsync(currentUser, thread);
                 return RedirectToAction(nameof(Index));
             }
             return View(thread);
@@ -68,8 +71,8 @@ namespace ForumProject.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            //var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            var response = await _service.GetDetailsAsync(id);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var response = await _service.GetDetailsAsync(currentUser, id);
             if (!response.Success)
                 return NotFound();
 
@@ -80,14 +83,14 @@ namespace ForumProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Status,DatePosted,UpVotes")] ForumModel thread)
         {
-            //var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
             if (id != thread.Id)
             {
                 return NotFound();
             }
             if (ModelState.IsValid)
             {
-                var response = await _service.EditThreadAsync(id, thread);
+                var response = await _service.EditThreadAsync(currentUser, id, thread);
                 if (response.Success)
                     return RedirectToAction(nameof(Index));
                 return NotFound();
@@ -97,8 +100,8 @@ namespace ForumProject.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
-            //var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            var response = await _service.GetDetailsAsync(id);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var response = await _service.GetDetailsAsync(currentUser, id);
             if (!response.Success) return NotFound();
             return View(response.Data);
         }
@@ -107,8 +110,8 @@ namespace ForumProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            //var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            var response = await _service.DeleteThreadAsync(id);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var response = await _service.DeleteThreadAsync(currentUser, id);
             if (response == null)
             {
                 return Problem("Entity Null");

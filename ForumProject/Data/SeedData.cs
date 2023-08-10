@@ -8,7 +8,7 @@ namespace ForumProject.Data
         public static void Initialise(IServiceProvider serviceProvider)
         {
             var context = serviceProvider.GetRequiredService<ForumDbContext>();
-            //var userManager = serviceProvider.GetRequiredService<UserManager<Adventurer>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<Adventurer>>();
 
             if (context.Adventurers.Any())
             {
@@ -21,8 +21,14 @@ namespace ForumProject.Data
             {
                 UserName = "ruya@forum.com",
                 Email = "ruya@forum.com",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                
             };
+
+            userManager
+                .CreateAsync(ruya, "Password_1")
+                .GetAwaiter()
+                .GetResult();
 
             if(context.Threads.Any())
             {
