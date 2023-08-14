@@ -50,7 +50,7 @@ namespace ForumProject.Data
                 {
                     Title = "Testing Thread Two",
                     Description = "The Adventurer(user) has a problem and describes it in this box here",
-                    Status = "Open",
+                    Status = "Closed",
                     DatePosted = DateTime.Today.AddDays(-1),
                     UpVotes = 10,
                     Adventurer = ruya

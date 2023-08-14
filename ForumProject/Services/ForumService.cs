@@ -2,6 +2,7 @@
 using ForumProject.Data;
 using ForumProject.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.PowerBI.Api.Models;
@@ -139,7 +140,7 @@ namespace ForumProject.Services
             return response;
         }
 
-        public async Task<ServiceResponse<ForumViewModel>> GetForumItemsAsync(Adventurer? user, string searchString)
+        public async Task<ServiceResponse<ForumViewModel>> GetForumItemsAsync(Adventurer? user, string searchString, string statusString)
         {
             var response = new ServiceResponse<ForumViewModel>();
             bool isNull = _context.Threads.IsNullOrEmpty();
@@ -159,15 +160,24 @@ namespace ForumProject.Services
 
             var threads = from t in _context.Threads
                           select t;
+            var statusQuery = from s in _context.Threads
+                              orderby s.Status
+                              select s.Status;
+            //var status = _context.Threads.Include(s => s.Adventurer).AsQueryable();
 
             if(!string.IsNullOrEmpty(searchString))
             {
                 threads = threads.Where(s => s.Title!.Contains(searchString));
+            }
 
+            if(!string.IsNullOrEmpty(statusString))
+            {
+                threads = threads.Where(x => x.Status == statusString);
             }
 
             response.Data = new ForumViewModel
             {
+                StatusList = new SelectList(await statusQuery.Distinct().ToListAsync()),
                 Threads = await threads.ToListAsync()
             };
             return response;

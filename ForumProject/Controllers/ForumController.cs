@@ -24,10 +24,10 @@ namespace ForumProject.Controllers
         //    return HttpContext.User.IsInRole("User") ? "User" : "Admin";
         //}
 
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, string statusString)
         {
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            var response = await _service.GetForumItemsAsync(currentUser, searchString);
+            var response = await _service.GetForumItemsAsync(currentUser, searchString, statusString);
             if (response.Success == false)
                 return Problem(response.Message);
             return View(response.Data);
@@ -50,7 +50,6 @@ namespace ForumProject.Controllers
 
         // GET: Movies/Create
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
